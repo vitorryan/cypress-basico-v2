@@ -1,6 +1,7 @@
 /// <reference types="Cypress" />
 
 describe('Central de Atendimento ao Cliente TAT', function() {
+    const THREE_SECONDS_IN_MS = 3000
     this.beforeEach('rota', function() {
         cy.visit('./src/index.html')
     })
@@ -76,6 +77,24 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.get('select').select('youtube')
         cy.get('select').should('be.visible', 'youtube')
 
+    })
+
+    it.only('exibe mensagem por 3 segundos', function() {
+
+        cy.clock()
+
+        cy.get('#firstName').type('vitor')
+        cy.get('#lastName').type('ryan')
+        cy.get('#email').type('vitorteste@teste.com')
+        cy.get('#open-text-area').type('deu certo essa porra caralho!! vamooooooo é us guri e não adianta', { delay: 0})
+       // CLICANDO NO BOTÃO
+        cy.contains('button', 'Enviar').click()
+
+        cy.get('.success').should('be.visible')
+
+        cy.tick(THREE_SECONDS_IN_MS)
+
+        cy.get('.success').should('not.be.visible')
     })
 })
 
